@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Photos</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Georgia, serif;
+  line-height: 1.7;
+  background: linear-gradient(135deg, #f5f5dc 0%, #ffe4e1 100%);
+  color: #2c3e50;
+}
+
+
+nav {
+  background: white;
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+}
+nav a {
+  text-decoration: none;
+  color: #d4a373;
+  font-weight: bold;
+}
+nav a:hover {
+  color: #f5b7b1;
+}
+
+
+.header {
+  text-align: center;
+  padding: 80px 20px;
+}
+.header h1 {
+  font-size: 3em;
+  color: #d4a373;
+}
+.header p {
+  color: #f5b7b1;
+  font-style: italic;
+  font-size: 1.3em;
+}
+
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+
+.section {
+  background: white;
+  margin-bottom: 50px;
+  padding: 35px;
+  border-radius: 15px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+}
+.section h2 {
+  color: #d4a373;
+  border-bottom: 2px solid #f5b7b1;
+  padding-bottom: 8px;
+  margin-bottom: 25px;
+}
+
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+.photo {
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+}
+.photo:hover {
+  transform: scale(1.05);
+}
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(245, 183, 177, 0.85);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+.lightbox img {
+  max-width: 85%;
+  max-height: 85%;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+
+.close {
+  position: absolute;
+  top: 25px;
+  right: 35px;
+  font-size: 42px;
+  color: white;
+  cursor: pointer;
+  font-weight: 300;
+}
+
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  font-size: 60px;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+  padding: 10px;
+}
+.arrow.left {
+  left: 30px;
+}
+.arrow.right {
+  right: 30px;
+}
+
+
+footer {
+  text-align: center;
+  padding: 30px;
+  color: #f5b7b1;
+  font-style: italic;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <ul>
+    <li><a href="My favourite hobby.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="tips.html">Tips</a></li>
+    <li><a href="photos.html">Photos</a></li>
+  </ul>
+</nav>
+
+<header class="header">
+  <h1>My Photos</h1>
+  <p>A collection of moments I’ve captured</p>
+</header>
+
+<div class="container">
+
+  <section class="section">
+    <h2>Nature</h2>
+    <div class="photo-grid">
+      <div class="photo"><img src="mn.jpg"></div>
+      <div class="photo"><img src="water.jpeg"></div>
+      <div class="photo"><img src="waterfall.jpg"></div>
+      <div class="photo"><img src="m.jpeg"></div>
+      <div class="photo"><img src="tree.jpeg"></div>
+      <div class="photo"><img src="loy.jpeg"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Travel</h2>
+    <div class="photo-grid">
+      <div class="photo"><img src="UK.jpg"></div>
+      <div class="photo"><img src="build.jpg"></div>
+      <div class="photo"><img src="room1.jpeg"></div>
+      <div class="photo"><img src="street.jpeg"></div>
+      <div class="photo"><img src="idk.jpeg"></div>
+      <div class="photo"><img src="pool.jpeg"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Everyday Moments</h2>
+    <div class="photo-grid">
+      <div class="photo"><img src="tp.jpeg"></div>
+      <div class="photo"><img src="cowfarts.jpeg"></div>
+      <div class="photo"><img src="silver.jpeg"></div>
+      <div class="photo"><img src="group.jpeg"></div>
+      <div class="photo"><img src="jj.jpeg"></div>
+      <div class="photo"><img src="preem.jpeg"></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>More photos on Instagram — Kitara_seq</p>
+</footer>
+
+
+<div class="lightbox" id="lightbox">
+  <span class="close" onclick="closeLightbox()">×</span>
+  <span class="arrow left" onclick="prevImage()">‹</span>
+  <img id="lightbox-img">
+  <span class="arrow right" onclick="nextImage()">›</span>
+</div>
+
+<script>
+let images = [];
+let currentIndex = 0;
+
+document.querySelectorAll(".photo img").forEach((img, index) => {
+  images.push(img.src);
+  img.parentElement.onclick = () => openLightbox(index);
+});
+
+function openLightbox(index) {
+  currentIndex = index;
+  document.getElementById("lightbox-img").src = images[currentIndex];
+  document.getElementById("lightbox").style.display = "flex";
+}
+
+function closeLightbox() {
+  document.getElementById("lightbox").style.display = "none";
+}
+
+function nextImage() {
+  currentIndex = (currentIndex + 1) % images.length;
+  document.getElementById("lightbox-img").src = images[currentIndex];
+}
+
+function prevImage() {
+  currentIndex = (currentIndex - 1 + images.length) % images.length;
+  document.getElementById("lightbox-img").src = images[currentIndex];
+}
+</script>
+
+</body>
+</html>
